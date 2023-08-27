@@ -1,0 +1,1 @@
+export const useNowPlaying = () => useState('nowPlayingState', () => true)

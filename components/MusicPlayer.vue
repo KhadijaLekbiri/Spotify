@@ -1,5 +1,5 @@
 <script setup lang="ts">
-// import { defineComponent } from 'vue'
+const nowPlaying = useNowPlaying();
 </script>
 
 <template>
@@ -56,7 +56,7 @@
     </div>
 
     <div class="w-4/12 flex gap-4 items-center justify-end">
-      <button>
+      <button @click="nowPlaying = !nowPlaying" class="hover:text-primary-600">
         <Icon name="ri:play-circle-line" size="20" />
       </button>
       <button>
