@@ -8,7 +8,7 @@ const nowPlaying = useNowPlaying();
       <Sidebar />
       <main class="py-2 pr-2 flex-grow">
         <div
-          class="rounded-md bg-gradient-to-b from-zinc-800 via-zinc-900 to-zinc-900 px-4 py-2 h-full overflow-clip hover:overflow-y-auto"
+          class="rounded-md bg-gradient-to-b from-zinc-800 via-zinc-900 to-zinc-900 px-4 py-2 h-full scroll"
         >
           <slot />
         </div>

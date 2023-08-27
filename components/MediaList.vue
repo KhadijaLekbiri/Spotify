@@ -74,7 +74,7 @@ const items = ref([
 </script>
 
 <template>
-  <div class="mt-3 space-y-3 flex-grow overflow-clip hover:overflow-y-auto">
+  <div class="mt-3 space-y-3 flex-grow scroll">
     <MediaListItem
       v-for="(item, index) in items"
       :key="index"

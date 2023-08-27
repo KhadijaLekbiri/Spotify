@@ -81,7 +81,7 @@ const tabs = ref([
           </button>
         </div>
 
-        <div class="flex gap-2 mt-3 overflow-x-clip hover:overflow-x-auto">
+        <div class="flex gap-2 mt-3 scroll">
           <button
             class="px-3 py-2 shrink-0 text-sm font-semibold rounded-full bg-zinc-800 hover:bg-zinc-700"
             v-for="tab in tabs"
