@@ -3,7 +3,9 @@
 </script>
 
 <template>
-  <header class="w-full bg-zinc-950 text-zinc-200 py-3 px-4 flex items-center justify-between gap-4">
+  <header
+    class="w-full bg-zinc-950 text-zinc-200 py-3 px-4 flex items-center justify-between gap-4"
+  >
     <div class="w-4/12">
       <div class="flex gap-4 items-center">
         <img src="https://picsum.photos/50/50" alt="album cover" class="rounded-md" />
@@ -30,7 +32,9 @@
         <button class="w-6 h-6 flex justify-center items-center">
           <Icon name="ri:skip-back-fill" size="20" />
         </button>
-        <button class="bg-white w-8 h-8 rounded-full grid place-items-center text-zinc-800">
+        <button
+          class="bg-white w-8 h-8 rounded-full grid place-items-center text-zinc-800"
+        >
           <Icon name="ri:play-fill" size="20" />
         </button>
         <button class="w-6 h-6 flex justify-center items-center">
