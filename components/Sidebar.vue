@@ -23,16 +23,19 @@ const tabs = ref([
 
 <template>
   <aside
-    class="p-2 space-y-2 flex flex-col"
+    class="p-2 space-y-2 flex flex-col shrink-0"
     :class="{
-      'w-3/12': !mini,
-      'w-28': mini,
+      'w-[400px]': !mini,
+      'w-24': mini,
     }"
   >
     <SidebarMenus :mini="mini" />
 
     <div
-      class="rounded-md bg-zinc-900 px-3 py-2 flex-grow max-h-[calc(100vh-200px)] flex flex-col"
+      class="rounded-md bg-zinc-900 px-3 py-4 flex-grow max-h-[calc(100vh-200px)] flex flex-col"
+      :class="{
+        'gap-3': mini,
+      }"
     >
       <div
         class="flex gap-2 items-center"
@@ -41,7 +44,7 @@ const tabs = ref([
         }"
       >
         <button @click="mini = !mini">
-          <Icon name="ri:play-list-line" size="26" />
+          <Icon name="ri:play-list-line" :size="mini ? '34' : '26'" />
         </button>
         <template v-if="!mini">
           <h3 class="flex-grow font-semibold">Your Library</h3>
@@ -60,9 +63,9 @@ const tabs = ref([
         </template>
       </div>
 
-      <div class="relative" :class="{ hidden: mini }">
+      <div class="relative group" :class="{ hidden: mini }">
         <div
-          class="absolute left-0 inset-y-0 top-3 hidden items-center bg-gradient-to-r from-transparent to-zinc-800 pr-2"
+          class="absolute left-0 inset-y-0 top-1 hidden items-center bg-gradient-to-r from-transparent to-zinc-800 pr-2"
         >
           <button
             class="w-8 h-8 rounded-full bg-zinc-700 hover:bg-zinc-600 shrink-0 shadow-md flex items-center justify-center"
@@ -72,10 +75,10 @@ const tabs = ref([
         </div>
 
         <div
-          class="absolute right-0 inset-y-0 top-3 flex items-center bg-gradient-to-l from-zinc-900 to-transparent pl-2"
+          class="absolute right-0 inset-y-0 top-1 flex items-center bg-gradient-to-l from-zinc-900 to-transparent pl-2"
         >
           <button
-            class="w-8 h-8 rounded-full bg-zinc-700 hover:bg-zinc-600 shrink-0 shadow-md flex items-center justify-center"
+            class="w-8 h-8 group-hover:flex rounded-full bg-zinc-700 hover:bg-zinc-600 shrink-0 shadow-md hidden items-center justify-center"
           >
             <Icon name="ri:arrow-right-s-line" size="20" />
           </button>

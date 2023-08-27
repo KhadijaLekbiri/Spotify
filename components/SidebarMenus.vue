@@ -24,7 +24,7 @@ const items = ref([
       v-for="item in items"
       :key="item.text"
     >
-      <Icon :name="item.icon" size="26" />
+      <Icon :name="item.icon" :size="mini ? '34' : '26'" />
       <span v-if="!mini">{{ item.text }}</span>
     </NuxtLink>
   </div>

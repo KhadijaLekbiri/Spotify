@@ -7,7 +7,7 @@ function close() {
 </script>
 
 <template>
-  <aside v-if="isOpen" class="w-3/12 shrink-0 p-2">
+  <aside v-if="isOpen" class="w-[400px] shrink-0 p-2">
     <div class="rounded-md bg-zinc-900 px-4 py-2 h-full scroll flex flex-col gap-4">
       <div class="flex gap-3">
         <h3 class="text-xl font-bold flex-1">50 Teratas - Indonesia</h3>
