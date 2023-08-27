@@ -6,7 +6,7 @@ const nowPlaying = useNowPlaying();
   <div class="flex flex-col h-screen">
     <div class="flex h-[calc(100vh-76px)]">
       <Sidebar />
-      <main class="py-2 pr-2" :class="[nowPlaying ? 'w-6/12' : 'flex-grow']">
+      <main class="py-2 pr-2 flex-grow">
         <div
           class="rounded-md bg-gradient-to-b from-zinc-800 via-zinc-900 to-zinc-900 px-4 py-2 h-full overflow-clip hover:overflow-y-auto"
         >

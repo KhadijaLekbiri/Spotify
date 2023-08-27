@@ -1,4 +1,6 @@
 <script setup lang="ts">
+const mini = useMiniSidebar();
+
 const tabs = ref([
   {
     text: "Playlists",
@@ -20,30 +22,45 @@ const tabs = ref([
 </script>
 
 <template>
-  <aside class="w-3/12 p-2 space-y-2 flex flex-col">
-    <SidebarMenus />
+  <aside
+    class="p-2 space-y-2 flex flex-col"
+    :class="{
+      'w-3/12': !mini,
+      'w-28': mini,
+    }"
+  >
+    <SidebarMenus :mini="mini" />
 
     <div
       class="rounded-md bg-zinc-900 px-3 py-2 flex-grow max-h-[calc(100vh-200px)] flex flex-col"
     >
-      <div class="flex gap-2 items-center">
-        <Icon name="ri:play-list-line" size="26" />
-        <h3 class="flex-grow font-semibold">Your Library</h3>
-        <div class="flex gap-2 items-center">
-          <button
-            class="w-8 h-8 rounded-full hover:bg-zinc-700 flex items-center justify-center"
-          >
-            <Icon name="ri:add-line" size="20" />
-          </button>
-          <button
-            class="w-8 h-8 rounded-full hover:bg-zinc-700 flex items-center justify-center"
-          >
-            <Icon name="ri:arrow-right-line" size="20" />
-          </button>
-        </div>
+      <div
+        class="flex gap-2 items-center"
+        :class="{
+          'justify-center': mini,
+        }"
+      >
+        <button @click="mini = !mini">
+          <Icon name="ri:play-list-line" size="26" />
+        </button>
+        <template v-if="!mini">
+          <h3 class="flex-grow font-semibold">Your Library</h3>
+          <div class="flex gap-2 items-center">
+            <button
+              class="w-8 h-8 rounded-full hover:bg-zinc-700 flex items-center justify-center"
+            >
+              <Icon name="ri:add-line" size="20" />
+            </button>
+            <button
+              class="w-8 h-8 rounded-full hover:bg-zinc-700 flex items-center justify-center"
+            >
+              <Icon name="ri:arrow-right-line" size="20" />
+            </button>
+          </div>
+        </template>
       </div>
 
-      <div class="relative">
+      <div class="relative" :class="{ hidden: mini }">
         <div
           class="absolute left-0 inset-y-0 top-3 hidden items-center bg-gradient-to-r from-transparent to-zinc-800 pr-2"
         >
@@ -75,7 +92,7 @@ const tabs = ref([
         </div>
       </div>
 
-      <div class="mt-3">
+      <div class="mt-3" :class="{ hidden: mini }">
         <div class="flex justify-between items-center gap-2">
           <button
             class="w-8 h-8 rounded-full hover:bg-zinc-700 shrink-0 shadow-md flex items-center justify-center"
@@ -96,7 +113,7 @@ const tabs = ref([
         </div>
       </div>
 
-      <MediaList />
+      <MediaList :mini="mini" />
     </div>
   </aside>
 </template>

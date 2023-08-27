@@ -1,4 +1,8 @@
 <script setup lang="ts">
+defineProps<{
+  mini: boolean;
+}>();
+
 const items = ref([
   {
     image: "https://picsum.photos/50/50?random=1",
@@ -71,6 +75,11 @@ const items = ref([
 
 <template>
   <div class="mt-3 space-y-3 flex-grow overflow-clip hover:overflow-y-auto">
-    <MediaListItem v-for="(item, index) in items" :key="index" v-bind="item" />
+    <MediaListItem
+      v-for="(item, index) in items"
+      :key="index"
+      v-bind="item"
+      :mini="mini"
+    />
   </div>
 </template>
