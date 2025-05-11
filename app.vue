@@ -8,12 +8,7 @@ useHead({
 </script>
 
 <template>
-  <div>
-    <NuxtLoadingIndicator />
-    <NuxtLayout>
-      <NuxtPage />
-    </NuxtLayout>
-  </div>
+  <NuxtPage />
 </template>
 
 <style>
@@ -37,3 +32,9 @@ useHead({
   height: 6px;
 }
 </style>
+
+<!-- <template>
+  <div>
+    <NuxtPage />
+  </div>
+</template> -->

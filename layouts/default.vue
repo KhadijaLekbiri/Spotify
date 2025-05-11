@@ -1,4 +1,6 @@
 <script setup lang="ts">
+// import { useNowPlaying } from '@/composables/layout';
+
 const nowPlaying = useNowPlaying();
 </script>
 
@@ -13,8 +15,8 @@ const nowPlaying = useNowPlaying();
           <slot />
         </div>
       </main>
-      <NowPlaying />
+      <!-- <NowPlaying /> -->
     </div>
-    <MusicPlayer />
+    <!-- <MusicPlayer /> -->
   </div>
 </template>

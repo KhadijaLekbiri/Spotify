@@ -1,120 +1,95 @@
 <script setup lang="ts">
-const items = [
+// Use auto-imported composables directly
+const { getAccessToken } = useSpotifyAuth();
+const { getArtistData } = useSpotifyArtist();
+const { getAlbumData } = useSpotifyAlbum();
+
+// Define the type for an item
+interface Item {
+  image: string;
+  title: string;
+  description: string;
+}
+
+// Define the type for each section
+interface Section {
+  label: string;
+  items: Item[];
+}
+
+// Define the items as a ref with the correct type
+const items = ref<Section[]>([
   {
     label: "Recently Played",
-    items: [
-      {
-        image: "https://picsum.photos/300/300?random=1",
-        title: "Top 50 - Indonesia",
-        description:
-          "Your daily update of the most played tracks in Indonesia right now.",
-      },
-      {
-        image: "https://picsum.photos/300/300?random=2",
-        title: "Top 50 - Global",
-        description: "The most played tracks on Spotify this week, worldwide.",
-      },
-      {
-        image: "https://picsum.photos/300/300?random=3",
-        title: "Top 50 - Indonesia",
-        description:
-          "Your daily update of the most played tracks in Indonesia right now.",
-      },
-      {
-        image: "https://picsum.photos/300/300?random=4",
-        title: "Top 50 - Global",
-        description: "The most played tracks on Spotify this week, worldwide.",
-      },
-      {
-        image: "https://picsum.photos/300/300?random=5",
-        title: "Top 50 - Indonesia",
-        description:
-          "Your daily update of the most played tracks in Indonesia right now.",
-      },
-    ],
+    items: [],
   },
   {
     label: "Made For Warsono",
-    items: [
-      {
-        image: "https://picsum.photos/300/300?random=21",
-        title: "Daily Mix 1",
-        description:
-          "Your daily mix of fresh tracks and the songs you've played most over the past month.",
-      },
-      {
-        image: "https://picsum.photos/300/300?random=22",
-        title: "Daily Mix 2",
-        description:
-          "Your daily mix of fresh tracks and the songs you've played most over the past month.",
-      },
-      {
-        image: "https://picsum.photos/300/300?random=23",
-        title: "Daily Mix 3",
-        description:
-          "Your daily mix of fresh tracks and the songs you've played most over the past month.",
-      },
-      {
-        image: "https://picsum.photos/300/300?random=24",
-        title: "Daily Mix 4",
-        description:
-          "Your daily mix of fresh tracks and the songs you've played most over the past month.",
-      },
-      {
-        image: "https://picsum.photos/300/300?random=25",
-        title: "Daily Mix 5",
-        description:
-          "Your daily mix of fresh tracks and the songs you've played most over the past month.",
-      },
-    ],
+    items: [],
   },
   {
     label: "Your top mixes",
-    items: [
-      {
-        image: "https://picsum.photos/300/300?random=31",
-        title: "Mix 1",
-        description:
-          "Your  mix of fresh tracks and the songs you've played most over the past month.",
-      },
-      {
-        image: "https://picsum.photos/300/300?random=32",
-        title: "Mix 2",
-        description:
-          "Your  mix of fresh tracks and the songs you've played most over the past month.",
-      },
-      {
-        image: "https://picsum.photos/300/300?random=33",
-        title: "Mix 3",
-        description:
-          "Your  mix of fresh tracks and the songs you've played most over the past month.",
-      },
-      {
-        image: "https://picsum.photos/300/300?random=34",
-        title: "Mix 4",
-        description:
-          "Your  mix of fresh tracks and the songs you've played most over the past month.",
-      },
-      {
-        image: "https://picsum.photos/300/300?random=35",
-        title: "Mix 5",
-        description:
-          "Your  mix of fresh tracks and the songs you've played most over the past month.",
-      },
-    ],
+    items: [],
   },
-];
-</script>
+]);
 
-<template>
-  <div>
-    <section class="mt-7" v-for="section in items" :key="section.label">
-      <h2 class="text-2xl font-semibold">
-        {{ section.label }}
-      </h2>
-      <div class="grid grid-cols-3 xl:grid-cols-5 gap-4 mt-5">
-        <MediaCard v-for="item in section.items" :key="item.title" v-bind="item" />
-      </div>
-    </section>
-  </div>
-</template>
+const fetchSpotifyData = async () => {
+  const clientId = '53576fb1696b4060b49cedc2f8859d4a';
+  const clientSecret = '635f498b437c448a84553f6f9dab0a1c';
+
+  try {
+    const accessToken = await getAccessToken(clientId, clientSecret);
+
+    // Fetch recently played artists
+    const recentArtistIds = [
+      '4Z8W4fKeB5YxbusRsdQVPb', // Example Artist ID: Radiohead
+      '3TVXtAsR1InumwjB7fR4p4', // Example Artist ID: Drake
+    ];
+    const recentlyPlayed = await Promise.all(
+      recentArtistIds.map((artistId) => getArtistData(accessToken, artistId))
+    );
+
+    items.value[0].items = recentlyPlayed.map((artist) => ({
+      image: artist.images[0]?.url || "https://picsum.photos/300/300?random=1",
+      title: artist.name,
+      description: `Artist: ${artist.name}`,
+    }));
+
+    // Fetch Made For Warsono (Daily Mixes)
+    const dailyMixes = [
+      '0vJhNkQ7qDWGbx5GL9j5h9', // Example Album ID
+      '4Zd1ET4jAvh1swbf2ggttg', // Example Album ID
+    ];
+    const madeForWarsono = await Promise.all(
+      dailyMixes.map((albumId) => getAlbumData(accessToken, albumId))
+    );
+
+    items.value[1].items = madeForWarsono.map((album) => ({
+      image: album.images[0]?.url || "https://picsum.photos/300/300?random=2",
+      title: album.name,
+      description: `Album: ${album.name}`,
+    }));
+
+    // Fetch Your top mixes (Example album/track lists)
+    const topMixes = [
+      '6x1XMOSGeiQknt0wQ0bI7Q', // Example Album ID
+      '3ZT9ikn6zH9ts1XtTOiAKV', // Example Album ID
+    ];
+    const topMixesData = await Promise.all(
+      topMixes.map((albumId) => getAlbumData(accessToken, albumId))
+    );
+
+    items.value[2].items = topMixesData.map((album) => ({
+      image: album.images[0]?.url || "https://picsum.photos/300/300?random=3",
+      title: album.name,
+      description: `Album: ${album.name}`,
+    }));
+  } catch (error) {
+    console.error('Error fetching Spotify data:', error);
+  }
+};
+
+onMounted(() => {
+  fetchSpotifyData();
+});
+</script>

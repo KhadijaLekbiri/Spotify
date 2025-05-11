@@ -1,122 +1,97 @@
 <script setup lang="ts">
-const mini = useMiniSidebar();
+import { ref } from 'vue';
 
-const tabs = ref([
-  {
-    text: "Playlists",
-    icon: "ri:play-list-line",
-  },
-  {
-    text: "Artists",
-    icon: "ri:artist-line",
-  },
-  {
-    text: "Albums",
-    icon: "ri:album-line",
-  },
-  {
-    text: "Podcasts and Shows",
-    icon: "ri:mic-line",
-  },
-]);
+// Removed mini, as we're keeping the sidebar expanded
+const tabs = [
+  { text: 'All', value: 'all' },
+  { text: 'Playlists', value: 'playlist' },
+  { text: 'Albums', value: 'album' },
+  { text: 'Songs', value: 'track' },
+  { text: 'Podcasts', value: 'podcast' },
+  { text: 'Shows', value: 'show' }
+];
+const selectedTab = ref('all');
+const searchQuery = ref('');
+const mediaListRef = ref();
+
+const handleSearch = (event: Event) => {
+  const input = event.target as HTMLInputElement;
+  searchQuery.value = input.value;
+  if (mediaListRef.value) {
+    mediaListRef.value.searchQuery = input.value;
+  }
+};
+
+const clearSearch = () => {
+  searchQuery.value = '';
+  if (mediaListRef.value) {
+    mediaListRef.value.searchQuery = '';
+  }
+};
 </script>
 
 <template>
-  <aside
-    class="p-2 space-y-2 flex flex-col shrink-0"
-    :class="{
-      'w-[400px]': !mini,
-      'w-24': mini,
-    }"
-  >
-    <SidebarMenus :mini="mini" />
+  <aside class="p-2 space-y-2 flex flex-col shrink-0 w-[300px]">
+    <img src="C:\Users\lenovo\nuxt-spotify-clone_ - Copie\logo.svg" alt="Logo" />
+
+    <SidebarMenus />
 
     <div
-      class="rounded-md bg-zinc-900 px-3 py-4 flex-grow max-h-[calc(100vh-200px)] flex flex-col"
-      :class="{
-        'gap-3': mini,
-      }"
+      class="rounded-md bg-zinc-900 px-3 py-4 flex-grow max-h-[calc(100vh-200px)] flex flex-col gap-3"
     >
-      <div
-        class="flex gap-2 items-center"
-        :class="{
-          'justify-center': mini,
-        }"
-      >
-        <button @click="mini = !mini">
-          <Icon name="ri:play-list-line" :size="mini ? '34' : '26'" />
+      <div class="flex gap-2 items-center">
+        <button>
+          <Icon name="ri:play-list-line" size="28" />
         </button>
-        <template v-if="!mini">
-          <h3 class="flex-grow font-semibold">Your Library</h3>
-          <div class="flex gap-2 items-center">
-            <button
-              class="w-8 h-8 rounded-full hover:bg-zinc-700 flex items-center justify-center"
-            >
-              <Icon name="ri:add-line" size="20" />
-            </button>
-            <button
-              class="w-8 h-8 rounded-full hover:bg-zinc-700 flex items-center justify-center"
-            >
-              <Icon name="ri:arrow-right-line" size="20" />
-            </button>
-          </div>
-        </template>
-      </div>
-
-      <div class="relative group" :class="{ hidden: mini }">
-        <div
-          class="absolute left-0 inset-y-0 top-1 hidden items-center bg-gradient-to-r from-transparent to-zinc-800 pr-2"
-        >
+        <h3 class="flex-grow font-semibold">Your Library</h3>
+        <div class="flex gap-2 items-center">
           <button
-            class="w-8 h-8 rounded-full bg-zinc-700 hover:bg-zinc-600 shrink-0 shadow-md flex items-center justify-center"
+            class="w-8 h-8 rounded-full hover:bg-zinc-700 flex items-center justify-center"
           >
-            <Icon name="ri:arrow-left-s-line" size="20" />
+            <Icon name="ri:add-line" size="20" />
           </button>
-        </div>
-
-        <div
-          class="absolute right-0 inset-y-0 top-1 flex items-center bg-gradient-to-l from-zinc-900 to-transparent pl-2"
-        >
           <button
-            class="w-8 h-8 group-hover:flex rounded-full bg-zinc-700 hover:bg-zinc-600 shrink-0 shadow-md hidden items-center justify-center"
+            class="w-8 h-8 rounded-full hover:bg-zinc-700 flex items-center justify-center"
           >
-            <Icon name="ri:arrow-right-s-line" size="20" />
-          </button>
-        </div>
-
-        <div class="flex gap-2 mt-3 scroll">
-          <button
-            class="px-3 py-2 shrink-0 text-sm font-semibold rounded-full bg-zinc-800 hover:bg-zinc-700"
-            v-for="tab in tabs"
-            :key="tab.text"
-          >
-            {{ tab.text }}
+            <Icon name="ri:arrow-right-line" size="20" />
           </button>
         </div>
       </div>
 
-      <div class="mt-3" :class="{ hidden: mini }">
+      <div class="mt-3">
         <div class="flex justify-between items-center gap-2">
           <button
             class="w-8 h-8 rounded-full hover:bg-zinc-700 shrink-0 shadow-md flex items-center justify-center"
+            @click="clearSearch"
           >
             <Icon name="ri:search-line" size="20" />
           </button>
-
           <input
             type="text"
             placeholder="Search..."
-            class="bg-zinc-800 hidden px-3 py-1.5 rounded-full text-sm focus:outline-none"
+            class="bg-zinc-800 px-3 py-1.5 rounded-full text-sm focus:outline-none w-full"
+            :value="searchQuery"
+            @input="handleSearch"
           />
-
-          <button class="text-xs flex items-center gap-1">
+          <button 
+            v-if="searchQuery"
+            class="text-xs flex items-center gap-1 hover:text-white"
+            @click="clearSearch"
+          >
+            Clear
+          </button>
+          <button 
+            v-else
+            class="text-xs flex items-center gap-1"
+          >
             Recents
             <Icon name="ri:arrow-down-s-line" size="16" />
           </button>
         </div>
       </div>
 
-      <MediaList :mini="mini" />
+      <!-- MediaList: Pass ref to access search functionality -->
+      <MediaList ref="mediaListRef" />
     </div>
   </aside>
 </template>
