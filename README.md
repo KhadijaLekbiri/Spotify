@@ -1,4 +1,8 @@
+The local link of the app is:
+https://3b07-41-137-204-13.ngrok-free.app
+
 <<<<<<< HEAD
+
 # Nuxt 3 Minimal Starter
 
 Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
@@ -61,7 +65,8 @@ pnpm run preview
 yarn preview
 ```
 
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
-=======
+# Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+
 # Spotify
->>>>>>> c6ef8c024f02025762fe1fe9e0036a15fc98e84f
+
+> > > > > > > c6ef8c024f02025762fe1fe9e0036a15fc98e84f
