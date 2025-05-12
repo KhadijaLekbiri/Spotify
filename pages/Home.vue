@@ -12,6 +12,7 @@ const topArtists = ref([]);
 const loadingArtists = ref(true);
 const popularArtists = ref([]);
 const loadingPopular = ref(true);
+const userProfile = ref(null);
 
 const scope = 'playlist-read-private playlist-read-collaborative playlist-read-public';
 
@@ -49,7 +50,8 @@ const fetchTopArtists = async () => {
 
 const fetchPopularArtists = async () => {
   try {
-    const playlistId = '37i9dQZEVXbMDoHDwVN2tF';
+    // Using a valid playlist ID from Spotify's Global Top 50
+    const playlistId = '37i9dQZEVXbLRQDuF5jeBp';
     console.log('Fetching data from Spotify API...');
     
     const response = await fetch(`https://api.spotify.com/v1/playlists/${playlistId}/tracks?limit=50`, {
@@ -78,15 +80,31 @@ const fetchPopularArtists = async () => {
     console.log('Popular Artists:', popularArtists.value);
   } catch (error) {
     console.error('Error fetching popular artists:', error);
+    loadingPopular.value = false;
   } finally {
     loadingPopular.value = false;
   }
 };
 
+async function fetchUserProfile() {
+  try {
+    const response = await fetch('https://api.spotify.com/v1/me', {
+      headers: {
+        Authorization: `Bearer ${accessToken.value}`,
+      },
+    });
+    if (!response.ok) throw new Error('Failed to fetch user profile');
+    userProfile.value = await response.json();
+  } catch (error) {
+    console.error('Error fetching user profile:', error);
+  }
+}
+
 onMounted(() => {
   if (accessToken.value) {
     fetchRecentlyPlayed();
     fetchPopularArtists();
+    fetchUserProfile();
   }
 });
 </script>
@@ -124,9 +142,9 @@ onMounted(() => {
         </a>
         <button>
           <img
-            src="https://picsum.photos/50/50?random=1"
-            alt="logo"
-            class="w-8 h-8 rounded-full"
+            :src="userProfile?.images?.[0]?.url || 'https://upload.wikimedia.org/wikipedia/commons/7/70/Spotify_icon.svg'"
+            :alt="userProfile?.display_name || 'Profile'"
+            class="w-8 h-8 rounded-full object-cover"
           />
         </button>
       </header>
@@ -152,66 +170,7 @@ onMounted(() => {
         </div>
       </div>
 
-      <!-- <div class="mt-10">
-        <h2 class="text-2xl font-bold mb-4">Popular Artists</h2>
-        <div v-if="loadingPopular" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-          <div v-for="i in 10" :key="i" class="animate-pulse h-72 bg-zinc-800 rounded-md"></div>
-        </div>
-        <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-          <ArtistInfo
-            v-for="artist in popularArtists"
-            :key="artist.id"
-            :image="artist.images?.[0]?.url || 'https://via.placeholder.com/300x300?text=Artist'"
-            :name="artist.name"
-            :listeners="artist.followers ? artist.followers.total.toLocaleString() : ''"
-            :description="artist.genres ? 'Genres: ' + artist.genres.join(', ') : 'No description available.'"
-          />
-        </div>
-      </div> -->
-
       <Footer />
     </NuxtLayout>
   </div>
 </template>
-
-<!-- 
-<template>
-  <div>
-    <NuxtLoadingIndicator />
-    <NuxtLayout>
-    <header class="flex gap-4 items-center sticky -mx-4 px-4 -top-2 bg-zinc-800 py-2">
-      <div class="flex gap-2">
-        <button class="w-8 h-8 bg-zinc-950 rounded-full grid place-items-center">
-          <Icon name="ri:arrow-left-s-line" size="24" />
-        </button>
-        <button class="w-8 h-8 bg-zinc-950 rounded-full grid place-items-center">
-          <Icon name="ri:arrow-right-s-line" size="24" />
-        </button>
-      </div>
-      <div class="flex-grow"></div>
-      <button
-        class="shrink-0 inline-flex gap-2 items-center px-4 py-1.5 tracking-wide font-semibold text-sm bg-zinc-200 border-zinc-200 text-zinc-900 rounded-full justify-center border"
-      >
-        Explore Premium
-      </button>
-      <button
-        class="shrink-0 inline-flex gap-2 items-center px-4 py-1.5 tracking-wide font-semibold text-sm bg-zinc-950 border-zinc-950 text-zinc-200 rounded-full justify-center border"
-      >
-        <Icon name="ri:download-line" size="16" />
-        Install App
-      </button>
-      <button>
-        <img
-          src="https://picsum.photos/50/50?random=1"
-          alt="logo"
-          class="w-8 h-8 rounded-full"
-        />
-      </button>
-    </header>
-
-    <div class="mt-6">
-      <MediaCard />
-    </div>
-    </NuxtLayout>
-  </div>
-</template> -->

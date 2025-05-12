@@ -108,12 +108,13 @@ const filteredList = computed(() => {
 
 // Expose searchQuery to parent component
 defineExpose({
-  searchQuery
+  searchQuery,
+  fetchAll
 });
 </script>
 
 <template>
-  <div class="mt-3 max-h-64 overflow-y-auto space-y-3 scroll-smooth playlist-container">
+  <div class="mt-3 max-h-48 overflow-y-auto space-y-3 scroll-smooth playlist-container">
     <!-- Category Filter Buttons styled like Sidebar.vue -->
     <div class="flex gap-2 mt-3 scroll">
       <button
@@ -169,31 +170,48 @@ defineExpose({
 
     <!-- Filtered List -->
     <div v-else>
-      <div
-        v-for="item in filteredList"
-        :key="item._type + '-' + item.id"
-        class="flex items-center gap-3 p-2 rounded-md hover:bg-zinc-800 cursor-pointer transition-colors"
-      >
-        <!-- Image -->
-        <img
-          :src="item._type === 'track' ? item.album.images[0]?.url : item.images[0]?.url || 'https://via.placeholder.com/50'"
-          :alt="item.name"
-          class="w-12 h-12 rounded-md object-cover"
-        />
-        <!-- Info -->
-        <div class="flex-grow min-w-0">
-          <h3 class="font-medium truncate">{{ item.name }}</h3>
-          <p class="text-sm text-gray-400 truncate">
-            <template v-if="item._type === 'playlist'">
+      <div v-for="item in filteredList" :key="item._type + '-' + item.id">
+        <a
+          v-if="item._type === 'playlist'"
+          :href="`https://open.spotify.com/playlist/${item.id}`"
+          target="_blank"
+          rel="noopener"
+          class="flex items-center gap-3 p-2 rounded-md hover:bg-zinc-800 cursor-pointer transition-colors"
+        >
+          <img
+            :src="item.images?.[0]?.url || 'https://via.placeholder.com/50'"
+            :alt="item.name"
+            class="w-12 h-12 rounded-md object-cover"
+          />
+          <div class="flex-grow min-w-0">
+            <h3 class="font-medium truncate">{{ item.name }}</h3>
+            <p class="text-sm text-gray-400 truncate">
               Playlist • {{ item.tracks.total }} songs
-            </template>
-            <template v-else-if="item._type === 'album'">
-              Album • {{ item.artists.map(a => a.name).join(', ') }}
-            </template>
-            <template v-else-if="item._type === 'track'">
-              Song • {{ item.artists.map(a => a.name).join(', ') }}
-            </template>
-          </p>
+            </p>
+          </div>
+        </a>
+        <div
+          v-else
+          class="flex items-center gap-3 p-2 rounded-md hover:bg-zinc-800 cursor-pointer transition-colors"
+        >
+          <img
+            :src="item._type === 'track' 
+              ? (item.album?.images?.[0]?.url || 'https://via.placeholder.com/50')
+              : (item.images?.[0]?.url || 'https://via.placeholder.com/50')"
+            :alt="item.name"
+            class="w-12 h-12 rounded-md object-cover"
+          />
+          <div class="flex-grow min-w-0">
+            <h3 class="font-medium truncate">{{ item.name }}</h3>
+            <p class="text-sm text-gray-400 truncate">
+              <template v-if="item._type === 'album'">
+                Album • {{ item.artists.map(a => a.name).join(', ') }}
+              </template>
+              <template v-else-if="item._type === 'track'">
+                Song • {{ item.artists.map(a => a.name).join(', ') }}
+              </template>
+            </p>
+          </div>
         </div>
       </div>
       <!-- Loading More Indicator for playlists -->
@@ -213,8 +231,8 @@ defineExpose({
   overflow-y: auto;
 }
 
-.max-h-64 {
-  max-height: 16rem;
+.max-h-48 {
+  max-height: 12rem;
 }
 
 .space-y-3 > * + * {

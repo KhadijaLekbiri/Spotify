@@ -2,9 +2,21 @@ import { ref } from 'vue';
 
 const SPOTIFY_CLIENT_ID = '53576fb1696b4060b49cedc2f8859d4a';
 const SPOTIFY_CLIENT_SECRET = '635f498b437c448a84553f6f9dab0a1c';
-const REDIRECT_URI = 'https://3b07-41-137-204-13.ngrok-free.app/callback';
+const REDIRECT_URI = 'http://localhost:3000/callback';
 const SPOTIFY_AUTH_ENDPOINT = 'https://accounts.spotify.com/authorize';
 const SPOTIFY_TOKEN_ENDPOINT = 'https://accounts.spotify.com/api/token';
+
+const scopes = [
+  'user-read-email',
+  'user-read-private',
+  'user-read-playback-state',
+  'user-modify-playback-state',
+  'user-read-currently-playing',
+  'playlist-read-private',
+  'playlist-read-collaborative',
+  'user-library-read',
+  'user-library-modify'
+].join(' ');
 
 export const useSpotifyAuth = () => {
   const accessToken = ref<string | null>(null);
@@ -203,14 +215,13 @@ export const useSpotifyAuth = () => {
       console.log('🔄 Initiating Spotify login...');
       console.log('Using redirect URI:', REDIRECT_URI);
 
-      const scope = 'playlist-read-private playlist-read-collaborative playlist-read-public';
       const authUrl = new URL(SPOTIFY_AUTH_ENDPOINT);
 
       // Add required parameters
       authUrl.searchParams.append('client_id', SPOTIFY_CLIENT_ID);
       authUrl.searchParams.append('response_type', 'code');
       authUrl.searchParams.append('redirect_uri', REDIRECT_URI);
-      authUrl.searchParams.append('scope', scope);
+      authUrl.searchParams.append('scope', scopes);
 
       // Add state parameter for security
       const state = Math.random().toString(36).substring(7);

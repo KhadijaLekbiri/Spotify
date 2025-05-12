@@ -1,3 +1,4 @@
+
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useSpotifyAuth } from '@/composables/useSpotifyAuth'
@@ -11,12 +12,24 @@ const { playlists, loading: playlistsLoading, getUserPlaylists } = useSpotifyPla
 const { albums, tracks, albumsLoading, tracksLoading, getUserAlbums, getUserTracks } = useSpotifyLibrary()
 
 onMounted(async () => {
-  if (accessToken.value) {
+  if (!accessToken.value) {
+    error.value = 'Please log in to view your library'
+    return
+  }
+
+  try {
+    console.log('Fetching Spotify data...')
     await Promise.all([
       getUserPlaylists(accessToken.value),
       getUserAlbums(accessToken.value),
       getUserTracks(accessToken.value)
     ])
+    console.log('Playlists:', playlists.value)
+    console.log('Albums:', albums.value)
+    console.log('Tracks:', tracks.value)
+  } catch (err) {
+    console.error('Error fetching library data:', err)
+    error.value = err instanceof Error ? err.message : 'Failed to fetch library data'
   }
 })
 </script>

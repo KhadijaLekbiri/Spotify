@@ -66,7 +66,7 @@ onMounted(() => {
         </a>
         <button>
           <img
-            src="https://picsum.photos/50/50?random=1"
+            src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Unknown_person.jpg/1200px-Unknown_person.jpg"
             alt="Profile"
             class="w-8 h-8 rounded-full"
           />
