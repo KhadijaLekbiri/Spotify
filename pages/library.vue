@@ -1,74 +1,152 @@
 <script setup>
-import { ref, onMounted } from 'vue';
-import { useSpotifyAuth } from '@/composables/useSpotifyAuth';
+import { ref, onMounted } from 'vue'
+import { useSpotifyAuth } from '@/composables/useSpotifyAuth'
+import { useSpotifyPlaylist } from '@/composables/useSpotifyPlaylist'
+import { useSpotifyLibrary } from '@/composables/useSpotifyLibrary'
+import MediaCard from '@/components/MediaCard.vue'
+import Footer from '@/components/Footer.vue'
 
-const { accessToken } = useSpotifyAuth();
-const playlists = ref([]);
-const loading = ref(true);
-const error = ref(null);
+const { accessToken } = useSpotifyAuth()
+const { playlists, loading: playlistsLoading, getUserPlaylists } = useSpotifyPlaylist()
+const { albums, tracks, albumsLoading, tracksLoading, getUserAlbums, getUserTracks } = useSpotifyLibrary()
 
-const fetchLibrary = async () => {
-  if (!accessToken.value) {
-    error.value = 'Please log in to view your library';
-    loading.value = false;
-    return;
+onMounted(async () => {
+  if (accessToken.value) {
+    await Promise.all([
+      getUserPlaylists(accessToken.value),
+      getUserAlbums(accessToken.value),
+      getUserTracks(accessToken.value)
+    ])
   }
-
-  try {
-    const response = await fetch('https://api.spotify.com/v1/me/playlists', {
-      headers: {
-        Authorization: `Bearer ${accessToken.value}`,
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to fetch library');
-    }
-
-    const data = await response.json();
-    playlists.value = data.items;
-  } catch (err) {
-    error.value = err.message;
-  } finally {
-    loading.value = false;
-  }
-};
-
-onMounted(() => {
-  fetchLibrary();
-});
+})
 </script>
 
 <template>
-  <div class="p-4">
-    <h1 class="text-2xl font-bold mb-4">Your Library</h1>
+  <div>
+    <NuxtLoadingIndicator />
+    <NuxtLayout>
+      <!-- Header (same as /Home) -->
+      <header class="flex gap-4 items-center sticky -mx-4 px-4 -top-2 bg-zinc-800 py-2">
+        <div class="flex gap-2">
+          <button class="w-8 h-8 bg-zinc-950 rounded-full grid place-items-center">
+            <Icon name="ri:arrow-left-s-line" size="24" />
+          </button>
+          <button class="w-8 h-8 bg-zinc-950 rounded-full grid place-items-center">
+            <Icon name="ri:arrow-right-s-line" size="24" />
+          </button>
+        </div>
+        <div class="flex-grow"></div>
+        <a
+          href="https://open.spotify.com/intl-fr/premium"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="shrink-0 inline-flex gap-2 items-center px-4 py-1.5 tracking-wide font-semibold text-sm bg-zinc-200 border-zinc-200 text-zinc-900 rounded-full justify-center border hover:bg-zinc-300 transition-colors"
+        >
+          Explore Premium
+        </a>
+        <a
+          href="https://open.spotify.com/download"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="shrink-0 inline-flex gap-2 items-center px-4 py-1.5 tracking-wide font-semibold text-sm bg-zinc-950 border-zinc-950 text-zinc-200 rounded-full justify-center border hover:bg-zinc-900 transition-colors"
+        >
+          <Icon name="ri:download-line" size="16" />
+          Install App
+        </a>
+        <button>
+          <img
+            src="https://picsum.photos/50/50?random=1"
+            alt="Profile"
+            class="w-8 h-8 rounded-full"
+          />
+        </button>
+      </header>
 
-    <!-- Loading State -->
-    <div v-if="loading" class="text-center py-4">
-      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-white mx-auto"></div>
-      <p class="mt-2 text-sm text-gray-400">Loading your library...</p>
-    </div>
-
-    <!-- Error State -->
-    <div v-else-if="error" class="text-red-500 text-center py-4">
-      {{ error }}
-    </div>
-
-    <!-- Library Content -->
-    <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      <div
-        v-for="playlist in playlists"
-        :key="playlist.id"
-        class="bg-zinc-800 rounded-lg p-4 hover:bg-zinc-700 transition-colors"
-      >
-        <img
-          :src="playlist.images[0]?.url || 'https://via.placeholder.com/150'"
-          :alt="playlist.name"
-          class="w-full h-40 object-cover rounded-md mb-3"
-        />
-        <h3 class="font-semibold">{{ playlist.name }}</h3>
-        <p class="text-sm text-gray-400">{{ playlist.tracks.total }} tracks</p>
+      <!-- Playlists Section -->
+      <div class="mt-6">
+        <h2 class="text-2xl font-bold mb-4">Your Playlists</h2>
+        <div v-if="playlistsLoading" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          <div v-for="i in 6" :key="i" class="animate-pulse">
+            <div class="bg-zinc-800 rounded-md aspect-square"></div>
+            <div class="h-4 bg-zinc-800 rounded mt-3 w-3/4"></div>
+            <div class="h-3 bg-zinc-800 rounded mt-2 w-1/2"></div>
+          </div>
+        </div>
+        <div v-else class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          <MediaCard
+            v-for="playlist in playlists"
+            :key="playlist.id"
+            :image="playlist.images[0]?.url"
+            :imageAlt="playlist.name"
+            :title="playlist.name"
+            :description="playlist.description"
+          />
+        </div>
       </div>
-    </div>
+
+      <!-- Albums Section -->
+      <div class="mt-10">
+        <h2 class="text-2xl font-bold mb-4">Your Albums</h2>
+        <div v-if="albumsLoading" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          <div v-for="i in 6" :key="i" class="animate-pulse">
+            <div class="bg-zinc-800 rounded-md aspect-square"></div>
+            <div class="h-4 bg-zinc-800 rounded mt-3 w-3/4"></div>
+            <div class="h-3 bg-zinc-800 rounded mt-2 w-1/2"></div>
+          </div>
+        </div>
+        <div v-else class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          <MediaCard
+            v-for="album in albums"
+            :key="album.id"
+            :image="album.images[0]?.url"
+            :imageAlt="album.name"
+            :title="album.name"
+            :description="album.artists.map(a => a.name).join(', ')"
+          >
+            <a
+              :href="`https://open.spotify.com/artist/${a.id}`"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="artist-card"
+            >
+              {{ a.name }}
+            </a>
+          </MediaCard>
+        </div>
+      </div>
+
+      <!-- Liked Songs Section -->
+      <div class="mt-10">
+        <h2 class="text-2xl font-bold mb-4">Liked Songs</h2>
+        <div v-if="tracksLoading" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          <div v-for="i in 6" :key="i" class="animate-pulse">
+            <div class="bg-zinc-800 rounded-md aspect-square"></div>
+            <div class="h-4 bg-zinc-800 rounded mt-3 w-3/4"></div>
+            <div class="h-3 bg-zinc-800 rounded mt-2 w-1/2"></div>
+          </div>
+        </div>
+        <div v-else class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          <MediaCard
+            v-for="track in tracks"
+            :key="track.id"
+            :image="track.album.images[0]?.url"
+            :imageAlt="track.name"
+            :title="track.name"
+            :description="track.artists.map(a => a.name).join(', ')"
+          >
+            <a
+              :href="`https://open.spotify.com/artist/${a.id}`"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="artist-card"
+            >
+              {{ a.name }}
+            </a>
+          </MediaCard>
+        </div>
+      </div>
+
+      <Footer />
+    </NuxtLayout>
   </div>
 </template> 

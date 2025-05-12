@@ -152,7 +152,7 @@ onMounted(() => {
         </div>
       </div>
 
-      <div class="mt-10">
+      <!-- <div class="mt-10">
         <h2 class="text-2xl font-bold mb-4">Popular Artists</h2>
         <div v-if="loadingPopular" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
           <div v-for="i in 10" :key="i" class="animate-pulse h-72 bg-zinc-800 rounded-md"></div>
@@ -167,7 +167,7 @@ onMounted(() => {
             :description="artist.genres ? 'Genres: ' + artist.genres.join(', ') : 'No description available.'"
           />
         </div>
-      </div>
+      </div> -->
 
       <Footer />
     </NuxtLayout>
