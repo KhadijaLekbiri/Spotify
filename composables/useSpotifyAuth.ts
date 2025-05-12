@@ -203,7 +203,7 @@ export const useSpotifyAuth = () => {
       console.log('🔄 Initiating Spotify login...');
       console.log('Using redirect URI:', REDIRECT_URI);
 
-      const scope = 'playlist-read-private playlist-read-collaborative';
+      const scope = 'playlist-read-private playlist-read-collaborative playlist-read-public';
       const authUrl = new URL(SPOTIFY_AUTH_ENDPOINT);
 
       // Add required parameters
