@@ -1,6 +1,5 @@
 The local link of the app is:
-https://3b07-41-137-204-13.ngrok-free.app
-
+https://dainty-sorbet-0324ac.netlify.app/
 <<<<<<< HEAD
 
 # Nuxt 3 Minimal Starter
