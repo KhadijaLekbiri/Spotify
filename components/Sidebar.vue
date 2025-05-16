@@ -50,7 +50,7 @@ function handleDropdownSelect(type: string) {
 
 <template>
   <aside class="p-2 space-y-2 flex flex-col shrink-0 w-[300px]">
-    <img src="logo.svg" alt="Logo" />
+    <img src="https://logos-marques.com/wp-content/uploads/2021/03/Spotify-Logo-2015.png" alt="Logo" />
 
     <SidebarMenus />
 
