@@ -49,7 +49,7 @@ export default defineNuxtConfig({
   server: {
     hmr: {
       protocol: 'wss',              // Use Secure WebSocket for HTTPS
-      host: '3b07-41-137-204-13.ngrok-free.app', // Your Ngrok domain
+      host: 'https://dainty-sorbet-0324ac.netlify.app', // Your Ngrok domain
       clientPort: 443,              // HTTPS default port
       timeout: 30000                // Increase timeout for stability
     },
@@ -58,7 +58,7 @@ export default defineNuxtConfig({
       interval: 100,                // Polling interval (ms)
     },
     allowedHosts: [
-      '3b07-41-137-204-13.ngrok-free.app', // Allow your Ngrok domain
+      'https://dainty-sorbet-0324ac.netlify.app', // Allow your Ngrok domain
     ],
   },
 }
