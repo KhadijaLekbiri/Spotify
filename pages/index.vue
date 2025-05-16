@@ -18,7 +18,7 @@
 <script setup>
 const AuthUrl = 'https://accounts.spotify.com/authorize';
 const ClientId = '53576fb1696b4060b49cedc2f8859d4a';
-const RedirectUri = 'https://3b07-41-137-204-13.ngrok-free.app/callback';
+const RedirectUri = 'https://dainty-sorbet-0324ac.netlify.app/callback';
 const scopes = [
   'user-read-private',
   'user-read-email',

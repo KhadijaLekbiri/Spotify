@@ -2,7 +2,7 @@ import { ref } from 'vue';
 
 const SPOTIFY_CLIENT_ID = '53576fb1696b4060b49cedc2f8859d4a';
 const SPOTIFY_CLIENT_SECRET = '635f498b437c448a84553f6f9dab0a1c';
-const REDIRECT_URI = 'http://localhost:3000/callback';
+const REDIRECT_URI = 'https://dainty-sorbet-0324ac.netlify.app/callback';
 const SPOTIFY_AUTH_ENDPOINT = 'https://accounts.spotify.com/authorize';
 const SPOTIFY_TOKEN_ENDPOINT = 'https://accounts.spotify.com/api/token';
 

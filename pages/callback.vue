@@ -12,7 +12,7 @@ import axios from 'axios'
 const CLIENT_ID = '53576fb1696b4060b49cedc2f8859d4a';
 const CLIENT_SECRET = '635f498b437c448a84553f6f9dab0a1c';
 const TOKEN_URL = 'https://accounts.spotify.com/api/token';
-const REDIRECT_URI = 'https://3b07-41-137-204-13.ngrok-free.app/callback';
+const REDIRECT_URI = 'https://dainty-sorbet-0324ac.netlify.app/callback';
 
 // Optional: Custom localStorage keys for tokens
 const TOKEN_KEY = 'spotify_token'
