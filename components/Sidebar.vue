@@ -50,7 +50,7 @@ function handleDropdownSelect(type: string) {
 
 <template>
   <aside class="p-2 space-y-2 flex flex-col shrink-0 w-[300px]">
-    <img src="C:\Users\lenovo\nuxt-spotify-clone_ - Copie\logo.svg" alt="Logo" />
+    <img src="logo.svg" alt="Logo" />
 
     <SidebarMenus />
 
